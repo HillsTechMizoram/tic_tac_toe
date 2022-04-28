@@ -1,5 +1,7 @@
+import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:tic_tac_toe/utilities/fonts.dart';
+import 'dart:math';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -26,97 +28,139 @@ class _HomePageState extends State<HomePage> {
   int exScore = 0;
   int filledBoxes = 0;
 
+  final _controller = ConfettiController();
+  bool isPlaying = false;
+
+  @override
+  void dispose() {
+    super.dispose();
+    _controller.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.grey[800],
-      body: Padding(
-        padding: const EdgeInsets.only(top: 15.0),
-        child: Column(
-          children: [
-            Expanded(
-                child: Container(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Colors.grey[800],
+        body: Padding(
+          padding: const EdgeInsets.only(top: 15.0),
+          child: Column(
+            children: [
+              Expanded(
+                  child: Column(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.all(15.0),
-                    child: Column(
+                  ConfettiWidget(
+                    confettiController: _controller,
+                    blastDirection: -pi / 2,
+                    emissionFrequency: 0.2,
+                    gravity: 0.02,
+                    // colors: [
+                    //   Colors.redAccent
+                    // ],
+                  ),
+                  Container(
+                    child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(
-                          'Player O',
-                          style: myNewFontWhite,
-                        ),
                         Padding(
-                          padding: const EdgeInsets.only(top: 20.0),
-                          child: Text(
-                            ohScore.toString(),
-                            style: fontWhiteNumber,
+                          padding: const EdgeInsets.all(15.0),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Player O',
+                                style: myNewFontWhite,
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(top: 20.0),
+                                child: Text(
+                                  ohScore.toString(),
+                                  style: fontWhiteNumber,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(15.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          'Player X',
-                          style: myNewFontWhite,
-                        ),
                         Padding(
-                          padding: const EdgeInsets.only(top: 20.0),
-                          child: Text(
-                            exScore.toString(),
-                            style: fontWhiteNumber,
+                          padding: const EdgeInsets.all(15.0),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Player X',
+                                style: myNewFontWhite,
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(top: 20.0),
+                                child: Text(
+                                  exScore.toString(),
+                                  style: fontWhiteNumber,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ],
                     ),
                   ),
                 ],
-              ),
-            )),
-            Expanded(
-              flex: 3,
-              child: GridView.builder(
-                  itemCount: 9,
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 3),
-                  itemBuilder: (BuildContext context, int index) {
-                    return GestureDetector(
-                      onTap: () {
-                        _tapped(index);
-                      },
-                      child: Container(
-                        decoration: BoxDecoration(
-                            border: Border.all(
-                                color: Color.fromARGB(255, 94, 94, 94))),
-                        child: Center(
-                          child: Text(
-                            displayExOh[index],
-                            //index.toString(),
-                            style: TextStyle(color: Colors.white, fontSize: 40),
+              )),
+              Expanded(
+                flex: 3,
+                child: GridView.builder(
+                    itemCount: 9,
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 3),
+                    itemBuilder: (BuildContext context, int index) {
+                      return GestureDetector(
+                        onTap: () {
+                          _tapped(index);
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                              border: Border.all(
+                                  color: Color.fromARGB(255, 94, 94, 94))),
+                          child: Center(
+                            child: Text(
+                              displayExOh[index],
+                              //index.toString(),
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 40),
+                            ),
                           ),
                         ),
-                      ),
-                    );
-                  }),
-            ),
-            Expanded(
-                child: Container(
-              child: Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Text(
-                  '@HillsTech.',
-                  style: myNewFontWhite,
-                ),
+                      );
+                    }),
               ),
-            )),
-          ],
+              Expanded(
+                  child: Container(
+                child: Column(
+                  children: [
+                    // MaterialButton(
+                    //   color: Colors.red,
+                    //   child: Text("WINNER!"),
+                    //   onPressed: () {
+                    //     if (isPlaying) {
+                    //       _controller.stop();
+                    //     } else {
+                    //       _controller.play();
+                    //     }
+                    //     isPlaying = !isPlaying;
+                    //   },
+                    // ),
+                    Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: Text(
+                        '@HillsTech.',
+                        style: myNewFontWhite,
+                      ),
+                    ),
+                  ],
+                ),
+              )),
+            ],
+          ),
         ),
       ),
     );
@@ -223,7 +267,7 @@ class _HomePageState extends State<HomePage> {
           return AlertDialog(
             title: Text('WINNER IS: ' + winner),
             actions: [
-              FlatButton(
+              MaterialButton(
                   onPressed: () {
                     _clearBoard();
                     Navigator.of(context).pop();
@@ -234,10 +278,24 @@ class _HomePageState extends State<HomePage> {
         });
 
     if (winner == 'o') {
+      _celebrateWinner();
       ohScore += 1;
     } else if (winner == 'x') {
+      _celebrateWinner();
       exScore += 1;
     }
+  }
+
+  void _celebrateWinner() {
+    setState(() {
+      if (isPlaying) {
+        _controller.play();
+      _controller.stop();
+      } else {
+        _controller.play();
+      }
+      isPlaying = !isPlaying;
+    });
   }
 
   void _clearBoard() {
