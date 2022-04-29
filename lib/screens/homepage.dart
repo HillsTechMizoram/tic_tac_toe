@@ -28,7 +28,9 @@ class _HomePageState extends State<HomePage> {
   int exScore = 0;
   int filledBoxes = 0;
 
-  final _controller = ConfettiController();
+  final _controller = ConfettiController(
+    duration: const Duration(seconds: 1),
+  );
   bool isPlaying = false;
 
   @override
@@ -120,13 +122,14 @@ class _HomePageState extends State<HomePage> {
                         child: Container(
                           decoration: BoxDecoration(
                               border: Border.all(
-                                  color: Color.fromARGB(255, 94, 94, 94))),
+                                  color:
+                                      const Color.fromARGB(255, 94, 94, 94))),
                           child: Center(
                             child: Text(
                               displayExOh[index],
                               //index.toString(),
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 40),
+                              style: const TextStyle(
+                                  color: Colors.white, fontSize: 40),
                             ),
                           ),
                         ),
@@ -169,10 +172,10 @@ class _HomePageState extends State<HomePage> {
   void _tapped(int index) {
     setState(() {
       if (ohTurn && displayExOh[index] == '') {
-        displayExOh[index] = 'o';
+        displayExOh[index] = 'O';
         filledBoxes += 1;
       } else if (!ohTurn && displayExOh[index] == '') {
-        displayExOh[index] = 'x';
+        displayExOh[index] = 'X';
         filledBoxes += 1;
       }
       ohTurn = !ohTurn;
@@ -246,14 +249,23 @@ class _HomePageState extends State<HomePage> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('DRAW'),
+            backgroundColor: Colors.grey[800],
+            title: Center(
+              child: Text(
+                'DRAW',
+                style: myNewFontWhite,
+              ),
+            ),
             actions: [
-              FlatButton(
+              MaterialButton(
                   onPressed: () {
                     _clearBoard();
                     Navigator.of(context).pop();
                   },
-                  child: Text('Play Again!'))
+                  child: Text(
+                    'Play Again!',
+                    style: myNewFontWhite,
+                  ))
             ],
           );
         });
@@ -265,22 +277,31 @@ class _HomePageState extends State<HomePage> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('WINNER IS: ' + winner),
+            backgroundColor: Colors.grey[800],
+            title: Center(
+              child: Text(
+                'WINNER IS: ' + winner,
+                style: myNewFontWhite,
+              ),
+            ),
             actions: [
               MaterialButton(
                   onPressed: () {
                     _clearBoard();
                     Navigator.of(context).pop();
                   },
-                  child: Text('Play Again!'))
+                  child: Text(
+                    'Play Again!',
+                    style: myNewFontWhite,
+                  ))
             ],
           );
         });
 
-    if (winner == 'o') {
+    if (winner == 'O') {
       _celebrateWinner();
       ohScore += 1;
-    } else if (winner == 'x') {
+    } else if (winner == 'X') {
       _celebrateWinner();
       exScore += 1;
     }
@@ -288,13 +309,13 @@ class _HomePageState extends State<HomePage> {
 
   void _celebrateWinner() {
     setState(() {
-      if (isPlaying) {
-        _controller.play();
-      _controller.stop();
-      } else {
-        _controller.play();
-      }
-      isPlaying = !isPlaying;
+      _controller.play();
+      // if (isPlaying) {
+      //   _controller.play();
+      // } else {
+      //   _controller.play();
+      // }
+      // isPlaying = !isPlaying;
     });
   }
 

@@ -10,4 +10,4 @@ var myNewFontWhite = GoogleFonts.pressStart2p(
         const TextStyle(color: Colors.white, letterSpacing: 3, fontSize: 15));
 var fontWhiteNumber = GoogleFonts.pressStart2p(
     textStyle:
-        const TextStyle(color: Colors.white, letterSpacing: 3, fontSize: 25));
+        const TextStyle(color: Colors.white, letterSpacing: 3, fontSize:25));

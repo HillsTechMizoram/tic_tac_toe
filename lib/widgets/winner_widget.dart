@@ -29,7 +29,7 @@ class _WinnerCelebrateState extends State<WinnerCelebrate> {
           body: Center(
             child: MaterialButton(
               color: Colors.red,
-              child: Text("WINNER!"),
+              child: const Text("WINNER!"),
               onPressed: () {
                 if(isPlaying) {
                   _controller.stop();
